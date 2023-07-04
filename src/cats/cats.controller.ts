@@ -1,15 +1,16 @@
 import { Controller, Get, Req, Res, Body, Post, Param } from '@nestjs/common';
 import { Cat } from '../models/cat';
 import { Response, Request } from 'express';
+import { CatsService } from './cats.service';
 
 @Controller('animals')
 export class CatsController {
-  cats: Cat[] = [];
+  constructor(private catsService: CatsService) {}
 
   // nestjs way, it will serelize the object to json
   @Get('cats')
   getCats(): Cat[] {
-    return this.cats;
+    return this.catsService.findAll();
   }
 
   // nestjs way, to pass the body we need to use the body decorator
@@ -17,7 +18,7 @@ export class CatsController {
   postCat(@Body() body): Cat {
     const cat = new Cat(body.name, body.age, 'Tabby', 'Meow');
 
-    this.cats.push(cat);
+    this.catsService.create(cat);
 
     return cat;
   }
@@ -27,7 +28,7 @@ export class CatsController {
   postCatExpress(@Req() req: Request, @Res() res: Response): void {
     const cat = new Cat(req.body.name, req.body.age, 'Tabby', 'Meow');
 
-    this.cats.push(cat);
+    this.catsService.create(cat);
 
     res.send(cat);
   }
@@ -36,6 +37,6 @@ export class CatsController {
   // return a cat by name
   @Get('cats/:name')
   getCatByName(@Param('name') name: string): Cat {
-    return this.cats.find((cat) => cat.name === name);
+    return this.catsService.findByName(name);
   }
 }
