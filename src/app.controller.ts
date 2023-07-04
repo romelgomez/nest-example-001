@@ -1,113 +1,12 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Response, Request } from 'express';
 
-class Animal {
-  name: string;
-  age: number;
-  breed: string;
-}
-
-class Dog extends Animal {
-  goodBoy: boolean;
-
-  constructor(name: string, age: number, breed: string, goodBoy: boolean) {
-    super();
-    this.name = name;
-    this.age = age;
-    this.breed = breed;
-    this.goodBoy = goodBoy;
-  }
-}
-
-class Cat extends Animal {
-  meow: string;
-
-  constructor(name: string, age: number, breed: string, meow: string) {
-    super();
-    this.name = name;
-    this.age = age;
-    this.breed = breed;
-    this.meow = meow;
-  }
-}
-
-@Controller('animals')
+@Controller()
 export class AppController {
-  cats: Cat[] = [];
-  dogs: Dog[] = [];
-
   constructor(private readonly appService: AppService) {}
 
   @Get()
   getHello(): string {
     return this.appService.getHello();
-  }
-
-  // nestjs way, it will serelize the object to json
-  @Get('cats')
-  getCats(): Cat[] {
-    return this.cats;
-  }
-
-  // express way, we have the request decorator and response decorator
-  @Get('dogs')
-  getDogs(@Req() req: Request, @Res() res: Response): void {
-    res.send(this.dogs);
-  }
-
-  // nestjs way, to pass the body we need to use the body decorator
-  @Post('cats')
-  postCat(@Body() body): Cat {
-    const cat = new Cat(body.name, body.age, 'Tabby', 'Meow');
-
-    this.cats.push(cat);
-
-    return cat;
-  }
-
-  // express way, we have the request decorator and response decorator
-  @Post('cats-express')
-  postCatExpress(@Req() req: Request, @Res() res: Response): void {
-    const cat = new Cat(req.body.name, req.body.age, 'Tabby', 'Meow');
-
-    this.cats.push(cat);
-
-    res.send(cat);
-  }
-
-  @Post('dogs')
-  postDog(@Body() body: Partial<Dog>): Dog {
-    const dog = new Dog(body.name, body.age, 'Golden Retriever', true);
-
-    this.dogs.push(dog);
-
-    return dog;
-  }
-
-  // express way, param decorator example
-  // return a dog by name
-  @Get('dogs/:name')
-  getDogByName(
-    @Param() params: { name: string },
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    const name = params?.name;
-
-    if (!name) {
-      res.send('No name provided');
-    }
-
-    const dog = this.dogs.find((dog) => dog.name === name);
-
-    res.send(dog);
-  }
-
-  // nestjs way, param decorator example
-  // return a cat by name
-  @Get('cats/:name')
-  getCatByName(@Param('name') name: string): Cat {
-    return this.cats.find((cat) => cat.name === name);
   }
 }
