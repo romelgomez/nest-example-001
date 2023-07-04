@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
-// import { Request } from 'express';
+import { Response, Request } from 'express';
 
 class Animal {
   name: string;
@@ -44,18 +44,16 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  // nestjs way, it will serelize the object to json
   @Get('cats')
   getCats(): Cat[] {
-    // const cat = new Cat('Mittens', 2, 'Tabby', 'Meow');
-
     return this.cats;
   }
 
+  // express way, we have the request decorator and response decorator
   @Get('dogs')
-  getDogs(@Res() res): Dog {
-    // const dog = new Dog('Rover', 4, 'Golden Retriever', true);
-
-    return res.send(this.dogs);
+  getDogs(@Req() req: Request, @Res() res: Response): void {
+    res.send(this.dogs);
   }
 
   @Post('cats')
@@ -69,18 +67,6 @@ export class AppController {
 
   @Post('dogs')
   postDog(@Body() body): Dog {
-    console.log(`\n\n ..:: res ::.. \n\n`);
-    console.log(
-      JSON.stringify(
-        {
-          body: body,
-        },
-        null,
-        2,
-      ),
-    );
-    console.log(`\n\n<----\n\n`);
-
     const dog = new Dog(body.name, body.age, 'Golden Retriever', true);
 
     this.dogs.push(dog);
