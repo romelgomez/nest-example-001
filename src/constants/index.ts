@@ -1,0 +1,4 @@
+export enum CustomProvidersEnum {
+  CATS_SERVICE_MOCK = 'CATS_SERVICE_MOCK',
+  CONSTANT_EXAMPLE = 'CONSTANT_EXAMPLE',
+}

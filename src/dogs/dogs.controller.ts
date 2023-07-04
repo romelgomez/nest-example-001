@@ -5,7 +5,7 @@ import { DogsService } from './dogs.service';
 
 @Controller('animals')
 export class DogsController {
-  constructor(private dogsService: DogsService) {}
+  constructor(private readonly dogsService: DogsService) {}
 
   // express way, we have the request decorator and response decorator
   @Get('dogs')
