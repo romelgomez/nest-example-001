@@ -1,10 +1,22 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 
 class Animal {
   name: string;
   age: number;
   breed: string;
+}
+
+class Dog extends Animal {
+  goodBoy: boolean;
+
+  constructor(name: string, age: number, breed: string, goodBoy: boolean) {
+    super();
+    this.name = name;
+    this.age = age;
+    this.breed = breed;
+    this.goodBoy = goodBoy;
+  }
 }
 
 class Cat extends Animal {
@@ -28,5 +40,12 @@ export class AppController {
     const cat = new Cat('Mittens', 2, 'Tabby', 'Meow');
 
     return cat;
+  }
+
+  @Get('dogs')
+  getDogs(@Res() res): Dog {
+    const dog = new Dog('Rover', 4, 'Golden Retriever', true);
+
+    return res.send(dog);
   }
 }
