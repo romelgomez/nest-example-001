@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
 
@@ -77,11 +77,37 @@ export class AppController {
   }
 
   @Post('dogs')
-  postDog(@Body() body): Dog {
+  postDog(@Body() body: Partial<Dog>): Dog {
     const dog = new Dog(body.name, body.age, 'Golden Retriever', true);
 
     this.dogs.push(dog);
 
     return dog;
+  }
+
+  // express way, param decorator example
+  // return a dog by name
+  @Get('dogs/:name')
+  getDogByName(
+    @Param() params: { name: string },
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const name = params?.name;
+
+    if (!name) {
+      res.send('No name provided');
+    }
+
+    const dog = this.dogs.find((dog) => dog.name === name);
+
+    res.send(dog);
+  }
+
+  // nestjs way, param decorator example
+  // return a cat by name
+  @Get('cats/:name')
+  getCatByName(@Param('name') name: string): Cat {
+    return this.cats.find((cat) => cat.name === name);
   }
 }
