@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CatsController } from './cats.controller';
 import { CatsService } from './cats.service';
-import { CustomersModule } from '../customers/customers.module';
 import { CustomProvidersEnum } from '../constants';
 import { IConstastExample } from '../interfaces';
 
 @Module({
-  imports: [CustomersModule],
+  imports: [],
   controllers: [CatsController],
   providers: [
     CatsService,
