@@ -56,6 +56,7 @@ export class AppController {
     res.send(this.dogs);
   }
 
+  // nestjs way, to pass the body we need to use the body decorator
   @Post('cats')
   postCat(@Body() body): Cat {
     const cat = new Cat(body.name, body.age, 'Tabby', 'Meow');
@@ -63,6 +64,16 @@ export class AppController {
     this.cats.push(cat);
 
     return cat;
+  }
+
+  // express way, we have the request decorator and response decorator
+  @Post('cats-express')
+  postCatExpress(@Req() req: Request, @Res() res: Response): void {
+    const cat = new Cat(req.body.name, req.body.age, 'Tabby', 'Meow');
+
+    this.cats.push(cat);
+
+    res.send(cat);
   }
 
   @Post('dogs')
