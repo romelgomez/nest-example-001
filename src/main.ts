@@ -9,8 +9,9 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.use(middlewares1);
-  app.use(middlewares2);
+  // global middleware example, it will be applied to every route
+  // app.use(middlewares1);
+  // app.use(middlewares2);
 
   await app.listen(3000);
 
