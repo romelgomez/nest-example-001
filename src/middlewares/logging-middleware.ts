@@ -6,7 +6,7 @@ export default class LoggingMiddleware implements NestMiddleware {
   constructor(private readonly logger: Logger) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, path } = req;
+    const { method, baseUrl } = req;
 
     const requestTime = new Date().getTime();
 
@@ -15,17 +15,22 @@ export default class LoggingMiddleware implements NestMiddleware {
       const responseTime = new Date().getTime() - requestTime;
 
       if (statusCode >= 500) {
-        this.logger.error(`${method} ${path} ${statusCode} ${responseTime}ms`);
+        this.logger.error(
+          `${method} ${baseUrl} ${statusCode} ${responseTime}ms`,
+        );
       } else if (statusCode >= 400) {
-        this.logger.warn(`${method} ${path} ${statusCode} ${responseTime}ms`);
+        this.logger.warn(
+          `${method} ${baseUrl} ${statusCode} ${responseTime}ms`,
+        );
       } else if (statusCode >= 300) {
-        this.logger.debug(`${method} ${path} ${statusCode} ${responseTime}ms`);
+        this.logger.debug(
+          `${method} ${baseUrl} ${statusCode} ${responseTime}ms`,
+        );
       } else {
-        this.logger.log(`${method} ${path} ${statusCode} ${responseTime}ms`);
+        this.logger.log(`${method} ${baseUrl} ${statusCode} ${responseTime}ms`);
       }
     });
 
-    this.logger.log(`Request...`);
     next();
   }
 }

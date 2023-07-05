@@ -7,6 +7,10 @@ import {
   Post,
   Param,
   Inject,
+  HttpException,
+  HttpStatus,
+  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Cat } from '../models/cat';
 import { Response, Request } from 'express';
@@ -14,6 +18,7 @@ import { CatsService } from './cats.service';
 import { CustomersService } from 'src/customers/customers.service';
 import { CustomProvidersEnum } from '../constants';
 import { IConstastExample } from '../interfaces';
+import errors from 'src/config/errors.config';
 
 @Controller('animals')
 export class CatsController {
@@ -40,6 +45,18 @@ export class CatsController {
       ),
     );
     console.log(`\n\n<----\n\n`);
+
+    // throw new HttpException(
+    //   {
+    //     error: true,
+    //     serverTime: new Date(),
+    //     message: 'this is a custom error message',
+    //   },
+    //   HttpStatus.INTERNAL_SERVER_ERROR,
+    //   {
+    //     cause: new Error('this is the cause of the error'),
+    //   },
+    // );
 
     return this.catsService.findAll();
   }
@@ -69,5 +86,57 @@ export class CatsController {
   @Get('cats/:name')
   getCatByName(@Param('name') name: string): Cat {
     return this.catsService.findByName(name);
+  }
+
+  @Get('cats-http-error')
+  getCatHttpError(): Cat[] {
+    // using the nestjs way to throw an error with exeption http filter
+    throw new InternalServerErrorException(
+      errors.internalErrorExample,
+      // {
+      //   error: true,
+      //   serverTime: new Date(),
+      //   message:
+      //     'this is a custom error message - InternalServerErrorException',
+      // },
+      {
+        cause: new Error('this is the cause of the error'),
+      },
+    );
+
+    // use then manual nestjs  way to throw an error
+    // throw new HttpException(
+    //   {
+    //     error: true,
+    //     serverTime: new Date(),
+    //     message: 'this is a custom error message',
+    //   },
+    //   HttpStatus.INTERNAL_SERVER_ERROR,
+    //   {
+    //     cause: new Error('this is the cause of the error'),
+    //   },
+    // );
+
+    return this.catsService.findAll();
+  }
+  @Get('cats-simple-error')
+  getCatError(): Cat[] {
+    // using the nestjs way to throw an error simple with exeption filter
+    throw new Error('this is a simple error');
+
+    // use then manual nestjs  way to throw an error
+    // throw new HttpException(
+    //   {
+    //     error: true,
+    //     serverTime: new Date(),
+    //     message: 'this is a custom error message',
+    //   },
+    //   HttpStatus.INTERNAL_SERVER_ERROR,
+    //   {
+    //     cause: new Error('this is the cause of the error'),
+    //   },
+    // );
+
+    return this.catsService.findAll();
   }
 }

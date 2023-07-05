@@ -1,7 +1,10 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
-import middlewares1 from './middlewares/middlewares-1';
-import middlewares2 from './middlewares/middlewares-2';
+// import middlewares1 from './middlewares/middlewares-1';
+// import middlewares2 from './middlewares/middlewares-2';
+import { HttpExceptionsFilter } from './exception-filters/http-exception.filter';
+import { SimpleErrorFilter } from './exception-filters/simple-error.filter';
 
 async function bootstrap() {
   const port = process.env.PORT || 3000;
@@ -12,6 +15,10 @@ async function bootstrap() {
   // global middleware example, it will be applied to every route
   // app.use(middlewares1);
   // app.use(middlewares2);
+
+  const loggerInstance = app.get(Logger);
+  app.useGlobalFilters(new SimpleErrorFilter(loggerInstance));
+  app.useGlobalFilters(new HttpExceptionsFilter(loggerInstance));
 
   await app.listen(3000);
 
