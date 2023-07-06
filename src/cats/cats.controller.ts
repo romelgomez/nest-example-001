@@ -11,6 +11,8 @@ import {
   HttpStatus,
   BadRequestException,
   InternalServerErrorException,
+  UsePipes,
+  Query,
 } from '@nestjs/common';
 import { Cat } from '../models/cat';
 import { Response, Request } from 'express';
@@ -19,6 +21,8 @@ import { CustomersService } from 'src/customers/customers.service';
 import { CustomProvidersEnum } from '../constants';
 import { IConstastExample } from '../interfaces';
 import errors from 'src/config/errors.config';
+import { MyFirstPipe } from 'src/pipes/my-first.pipe';
+import { ToNumberPipe } from 'src/pipes/to-number.pipe';
 
 @Controller('animals')
 export class CatsController {
@@ -33,18 +37,35 @@ export class CatsController {
 
   // nestjs way, it will serelize the object to json
   @Get('cats')
-  getCats(): Cat[] {
-    console.log(`\n\n ..:: custom provider example  ::.. \n\n`);
-    console.log(
-      JSON.stringify(
-        {
-          ...this.constantExample,
-        },
-        null,
-        2,
-      ),
-    );
-    console.log(`\n\n<----\n\n`);
+
+  // nestjs way to use pipes for query params
+  getCats(@Query('limit', ToNumberPipe) limit: string): Cat[] {
+    console.log('limit', limit);
+    console.log('limit type', typeof limit);
+
+    // console.log(`\n\n ..::  ::.. \n\n`);
+    // console.log(
+    //   JSON.stringify(
+    //     {
+    //       limit,
+    //     },
+    //     null,
+    //     2,
+    //   ),
+    // );
+    // console.log(`\n\n<----\n\n`);
+
+    // console.log(`\n\n ..:: custom provider example  ::.. \n\n`);
+    // console.log(
+    //   JSON.stringify(
+    //     {
+    //       ...this.constantExample,
+    //     },
+    //     null,
+    //     2,
+    //   ),
+    // );
+    // console.log(`\n\n<----\n\n`);
 
     // throw new HttpException(
     //   {
@@ -61,6 +82,8 @@ export class CatsController {
     return this.catsService.findAll();
   }
 
+  // nestjs way of implementing a custom pipe
+  @UsePipes(MyFirstPipe)
   // nestjs way, to pass the body we need to use the body decorator
   @Post('cats')
   postCat(@Body() body): Cat {
