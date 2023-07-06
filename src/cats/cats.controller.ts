@@ -13,6 +13,7 @@ import {
   InternalServerErrorException,
   UsePipes,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Cat } from '../models/cat';
 import { Response, Request } from 'express';
@@ -23,6 +24,7 @@ import { IConstastExample } from '../interfaces';
 import errors from 'src/config/errors.config';
 import { MyFirstPipe } from 'src/pipes/my-first.pipe';
 import { ToNumberPipe } from 'src/pipes/to-number.pipe';
+import { ExampleValidationPipe } from 'src/pipes/example-validation.pipe';
 
 @Controller('animals')
 export class CatsController {
@@ -39,7 +41,15 @@ export class CatsController {
   @Get('cats')
 
   // nestjs way to use pipes for query params
-  getCats(@Query('limit', ToNumberPipe) limit: string): Cat[] {
+  // getCats(@Query('limit', ToNumberPipe) limit: string): Cat[] {
+
+  // using nest js pipes validation verification can prevent the controller to be executed
+  @UsePipes(ExampleValidationPipe)
+  getCats(
+    // using nest js pipes
+    @Query('limit', new ParseIntPipe({ errorHttpStatusCode: 401 }))
+    limit: string,
+  ): Cat[] {
     console.log('limit', limit);
     console.log('limit type', typeof limit);
 

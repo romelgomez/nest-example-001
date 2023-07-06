@@ -14,6 +14,11 @@ const errors = {
     serverTime: new Date(),
     message: 'this is a custom error message',
   },
+  validationFailed: {
+    error: true,
+    serverTime: new Date(),
+    message: 'Validation failed',
+  },
 };
 
 export default errors;
