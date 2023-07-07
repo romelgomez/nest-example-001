@@ -19,7 +19,7 @@ export class SimpleErrorFilter implements ExceptionFilter {
     // plus add to the logger the stack trace
     this.logger.error(
       `${request.method} ${request.originalUrl}`,
-      exception.stack,
+      // exception.stack,
     );
 
     response.status(HttpStatus.I_AM_A_TEAPOT).json({

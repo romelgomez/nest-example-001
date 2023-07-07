@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 // import middlewares1 from './middlewares/middlewares-1';
 // import middlewares2 from './middlewares/middlewares-2';
@@ -19,6 +19,11 @@ async function bootstrap() {
   const loggerInstance = app.get(Logger);
   app.useGlobalFilters(new SimpleErrorFilter(loggerInstance));
   app.useGlobalFilters(new HttpExceptionsFilter(loggerInstance));
+
+  // this validate the input data of the body of the request
+  app.useGlobalPipes(new ValidationPipe({
+    disableErrorMessages:   false,
+  }));
 
   await app.listen(3000);
 

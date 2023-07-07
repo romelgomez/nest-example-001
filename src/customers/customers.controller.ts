@@ -1,5 +1,5 @@
 import { Controller, Get, Req, Res, Body, Post, Param } from '@nestjs/common';
-import { Customer } from '../models/customer';
+import { Customer } from './customer.model';
 import { CustomersService } from './customers.service';
 
 @Controller('customers')

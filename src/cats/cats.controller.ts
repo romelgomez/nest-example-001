@@ -15,7 +15,7 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Cat } from '../models/cat';
+import { Cat } from './cat.model';
 import { Response, Request } from 'express';
 import { CatsService } from './cats.service';
 import { CustomersService } from 'src/customers/customers.service';
@@ -25,6 +25,8 @@ import errors from 'src/config/errors.config';
 import { MyFirstPipe } from 'src/pipes/my-first.pipe';
 import { ToNumberPipe } from 'src/pipes/to-number.pipe';
 import { ExampleValidationPipe } from 'src/pipes/example-validation.pipe';
+import { CatDto } from './cat.dtos';
+import { CatBreed } from 'src/enums/cat-breed.enum';
 
 @Controller('animals')
 export class CatsController {
@@ -93,11 +95,15 @@ export class CatsController {
   }
 
   // nestjs way of implementing a custom pipe
-  @UsePipes(MyFirstPipe)
+  // @UsePipes(MyFirstPipe)
   // nestjs way, to pass the body we need to use the body decorator
   @Post('cats')
-  postCat(@Body() body): Cat {
-    const cat = new Cat(body.name, body.age, 'Tabby', 'Meow');
+  postCat(@Body() body: CatDto): Cat {
+    // const { name, age } = body;
+
+    console.log('..:: postCat ::..', body);
+
+    const cat = new Cat(body.name, +body.age, body.breed, body.meow);
 
     this.catsService.create(cat);
 

@@ -1,4 +1,5 @@
-import { Animal } from './animal';
+import { CatBreed } from 'src/enums/cat-breed.enum';
+import { Animal } from '../animals/animal.model';
 
 export class Dog extends Animal {
   goodBoy: boolean;

@@ -1,5 +1,5 @@
 import { Controller, Get, Req, Res, Body, Post, Param } from '@nestjs/common';
-import { Dog } from '../models/dog';
+import { Dog } from './dog.model';
 import { Response, Request } from 'express';
 import { DogsService } from './dogs.service';
 
